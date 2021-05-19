@@ -12,4 +12,9 @@ public class NotaController {
 	public void test() {
 		System.out.println("funziona");
 	}
+
+	public void test2() {
+		System.out.println("funzioan con stefano");
+	}
+
 }
