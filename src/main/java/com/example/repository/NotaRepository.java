@@ -1,10 +1,12 @@
-package repository;
+package com.example.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import model.Nota;
+import com.example.model.Nota;
+
 
 public interface NotaRepository extends CrudRepository<Nota,Long>{
+
 }
 
 
