@@ -23,9 +23,17 @@ public class NotaController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET,value = "/getNota/{id}")
-	public Optional<Nota> getNotaById(@PathVariable Long id) {
-		System.out.println("Nota:");
-		return notaRepository.findById(id);
+	public String getNotaById(@PathVariable Long id) {
+		if(notaRepository.findById(id).isPresent()){
+			return "Nota trovata : \n"+notaRepository.findById(id);
+		}else return "Non è stata trovata nessuna nota.";
+	}
+
+	@RequestMapping(method = RequestMethod.GET,value = "/getNodaTitolo/{title}")
+	public String getNotaByTitle(@PathVariable String title) {
+		if(notaRepository.findByTitle(title).isPresent()){
+			return "Nota con titolo, trovata.\n"+notaRepository.findByTitle(title);
+		}else return "Non è stata trovata nessuna nota con questo titolo";
 	}
 
 	@RequestMapping(method = RequestMethod.POST,value = "/deleteNota/{id}")
