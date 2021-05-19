@@ -3,23 +3,35 @@ package com.example.controller;
 import com.example.model.Nota;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import com.example.repository.NotaRepository;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
 @RestController
 @RequestMapping(path="/")
 public class NotaController {
-	
+
 	@Autowired
 	NotaRepository notaRepository;
-	
-	public void test() {
-		System.out.println("funziona");
+
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	public void createNote(@RequestBody Nota nota) {
+
+		notaRepository.save(nota);
+
+	}
+
+	@RequestMapping(value="/update/{id}", method = RequestMethod.POST)
+	public Nota updateNota(@RequestBody Nota newNota, @PathVariable Long id) {
+
+		return notaRepository.findById(id)
+				.map(nota -> {
+					nota.setTitle(newNota.getTitle());
+					nota.setDescription(newNota.getDescription());
+					return notaRepository.save(nota);
+				}).orElseThrow();
+
 	}
 
 	@RequestMapping(method = RequestMethod.GET,value = "/getNota/{id}")
@@ -45,5 +57,8 @@ public class NotaController {
 	}
 
 
-
 }
+
+
+
+
