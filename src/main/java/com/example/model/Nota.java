@@ -1,5 +1,12 @@
 package com.example.model;
 
+
+import javax.persistence.*;
+
+import lombok.Data;
+
+import java.io.Serializable;
+
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -15,14 +22,18 @@ import lombok.Data;
 @Data
 public class Nota implements Serializable{
 
-
-	private static final long serialVersionUID = 2910931843057274281L;
-
 	@Id
+	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	public String title;
-	public String description;
+	private long id;
+
+	@Column
+	private String title;
+
+	@Column
+	private String description;
+
+
+
 
 }
