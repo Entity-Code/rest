@@ -20,7 +20,7 @@ public class Nota implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 7145958597653856809L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
