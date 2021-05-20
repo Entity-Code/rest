@@ -45,11 +45,9 @@ public class NotaController {
 	    return ResponseEntity.ok().body(nota);
 	  }
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public void createNote(@RequestBody Nota nota) {
-
-		notaRepository.save(nota);
-
+	@PostMapping("/create")
+	public Nota createNote(@RequestBody Nota nota) {
+		return notaRepository.save(nota);
 	}
 
 	@RequestMapping(value="/update/{id}", method = RequestMethod.POST)
