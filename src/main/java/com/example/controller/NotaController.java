@@ -33,55 +33,48 @@ public class NotaController {
 	  }
 	  
 	  @GetMapping("/note/{id}")
-	  public ResponseEntity<Nota> getUsersById(@PathVariable(value = "id") Long notaId)
-	      throws ResourceNotFoundException {
+	  public ResponseEntity<Nota> getUsersById(@PathVariable(value = "id") Long notaId) {
 	    Nota nota =
 	    		notaRepository
 	            .findById(notaId)
-	            .orElseThrow(() -> new ResourceNotFoundException("nota not found on :: " + notaId));
+	            .orElseThrow();
 	    return ResponseEntity.ok().body(nota);
 	  }
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public void createNote(@RequestBody Nota nota) {
+	@PostMapping("/create")
+	public Nota createNote(@RequestBody Nota nota) {
 
-		notaRepository.save(nota);
-
+		return notaRepository.save(nota);
 	}
 
-	@RequestMapping(value="/update/{id}", method = RequestMethod.POST)
-		
-	public Nota updateNota(@RequestBody Nota newNota, @PathVariable Long id) throws ResourceNotFoundException {
-
-		return notaRepository.findById(id)
-				.map(nota -> {
-					nota.setTitle(newNota.getTitle());
-					nota.setDescription(newNota.getDescription());
-					return notaRepository.save(nota);
-
-	
-				}).orElseThrow(() -> new ResourceNotFoundException("nota not found on :: " + id));
-
-
-	}
-	
-
-
-	@RequestMapping(method = RequestMethod.GET,value = "/getNota/{id}")
+	@GetMapping("/getNota/{id}")
 	public String getNotaById(@PathVariable Long id) {
 		if(notaRepository.findById(id).isPresent()){
 			return "Nota trovata : \n"+notaRepository.findById(id);
 		}else return "Non è stata trovata nessuna nota.";
 	}
 
-	@RequestMapping(method = RequestMethod.GET,value = "/getNodaTitolo/{title}")
+	@GetMapping("/getNodaTitolo/{title}")
 	public String getNotaByTitle(@PathVariable String title) {
 		if(notaRepository.findByTitle(title).isPresent()){
 			return "Nota con titolo, trovata.\n"+notaRepository.findByTitle(title);
 		}else return "Non è stata trovata nessuna nota con questo titolo";
 	}
 
-	@RequestMapping(method = RequestMethod.POST,value = "/deleteNota/{id}")
+	@PostMapping("/update/{id}")
+	public Nota updateNota(@RequestBody Nota newNota, @PathVariable Long id) {
+		
+		return notaRepository.findById(id)
+				.map(nota -> {
+					nota.setTitle(newNota.getTitle());
+					nota.setDescription(newNota.getDescription());
+					return notaRepository.save(nota);
+					
+				}).orElseThrow();
+	}
+	
+	
+	@PostMapping("/deleteNota/{id}")
 	public String deleteNota (@PathVariable Long id) {
 		if(notaRepository.existsById(id)){
 			notaRepository.deleteById(id);
