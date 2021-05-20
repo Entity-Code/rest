@@ -1,11 +1,14 @@
 package com.example.controller;
 
 import com.example.model.Nota;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
 import com.example.repository.NotaRepository;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Optional;
 
 @RestController
@@ -42,10 +45,13 @@ public class NotaController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET,value = "/getNodaTitolo/{title}")
-	public String getNotaByTitle(@PathVariable String title) {
-		if(notaRepository.findByTitle(title).isPresent()){
-			return "Nota con titolo, trovata.\n"+notaRepository.findByTitle(title);
-		}else return "Non è stata trovata nessuna nota con questo titolo";
+	public void getNotaByTitle(@PathVariable String title, HttpServletResponse response) throws IOException {
+		if(!notaRepository.findByTitle(title).isEmpty()){
+			response.getWriter().println("Nota con titolo, trovata:\nid,title,description");
+		for(Nota str : notaRepository.findByTitle(title)){
+			response.getWriter().println(str.getId()+", "+str.getTitle()+", "+str.getDescription());
+		}
+		}else response.getWriter().println("Nessuna nota trovata");
 	}
 
 	@RequestMapping(method = RequestMethod.POST,value = "/deleteNota/{id}")
