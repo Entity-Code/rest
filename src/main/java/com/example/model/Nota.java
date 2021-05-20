@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,18 +22,22 @@ import lombok.Data;
 @Table(name="nota")
 @Data
 public class Nota implements Serializable{
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3670248508018192566L;
 
 	@Id
-	@Column
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-
+	
 	@Column
 	private String title;
-
+	
 	@Column
 	private String description;
-
 
 
 
