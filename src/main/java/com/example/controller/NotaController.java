@@ -13,12 +13,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.model.Nota;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.bind.annotation.*;
 import com.example.repository.NotaRepository;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path="/demo")
 public class NotaController {
-	
+
 	@Autowired
 	NotaRepository notaRepository;
 	
@@ -39,22 +44,54 @@ public class NotaController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public void createNote(@RequestBody Nota nota) {
-			
+
 		notaRepository.save(nota);
-			
+
 	}
-	
+
 	@RequestMapping(value="/update/{id}", method = RequestMethod.POST)
-	public Nota updateNota(@RequestBody Nota newNota, @PathVariable Long id) throws ResourceNotFoundException {
 		
+	public Nota updateNota(@RequestBody Nota newNota, @PathVariable Long id) throws ResourceNotFoundException {
+
 		return notaRepository.findById(id)
-			   .map(nota -> {
+				.map(nota -> {
 					nota.setTitle(newNota.getTitle());
 					nota.setDescription(newNota.getDescription());
 					return notaRepository.save(nota);
-				}).orElseThrow(() -> new ResourceNotFoundException("id not found on :: " + id));
 
 	
+				}).orElseThrow(() -> new ResourceNotFoundException("nota not found on :: " + id));
+
+
 	}
 	
+
+
+	@RequestMapping(method = RequestMethod.GET,value = "/getNota/{id}")
+	public String getNotaById(@PathVariable Long id) {
+		if(notaRepository.findById(id).isPresent()){
+			return "Nota trovata : \n"+notaRepository.findById(id);
+		}else return "Non è stata trovata nessuna nota.";
+	}
+
+	@RequestMapping(method = RequestMethod.GET,value = "/getNodaTitolo/{title}")
+	public String getNotaByTitle(@PathVariable String title) {
+		if(notaRepository.findByTitle(title).isPresent()){
+			return "Nota con titolo, trovata.\n"+notaRepository.findByTitle(title);
+		}else return "Non è stata trovata nessuna nota con questo titolo";
+	}
+
+	@RequestMapping(method = RequestMethod.POST,value = "/deleteNota/{id}")
+	public String deleteNota (@PathVariable Long id) {
+		if(notaRepository.existsById(id)){
+			notaRepository.deleteById(id);
+			return "Nota con id: "+id+", eliminata";
+		}else return "Nota non esistente con id: "+id+".";
+	}
+
+
 }
+
+
+
+
